@@ -1,6 +1,6 @@
 const Person = require('../models/personModel')
 const { getPostData } = require('../utils')
-
+const validate = require('uuid-validate');
 // @desc Get all persons
 // @route GET /person
 async function getPersons(req, res) {
@@ -18,7 +18,10 @@ async function getPersons(req, res) {
 async function getPersonById(req, res, id) {
     try {
         const person = await Person.findById(id)
-        if (!person) {
+        if (!validate(id)) {
+            res.writeHead(400, { 'Content-Type': 'application/json' })
+            res.end(JSON.stringify({ message: 'id is not valid!!' }))
+        } else if (!person) {
             res.writeHead(404, { 'Content-Type': 'application/json' })
             res.end(JSON.stringify({ message: 'person is not found!!' }))
         } else {
