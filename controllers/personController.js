@@ -9,7 +9,8 @@ async function getPersons(req, res) {
         res.writeHead(200, { 'Content-Type': 'application/json' })
         res.end(JSON.stringify(persons))
     } catch {
-        console.err(error);
+        res.writeHead(500, { 'Content-Type': 'application/json' })
+        res.end(JSON.stringify({ message: '500 error - server error' }))
     }
 }
 
@@ -29,7 +30,8 @@ async function getPersonById(req, res, id) {
             res.end(JSON.stringify(person))
         }
     } catch {
-        console.err(error);
+        res.writeHead(500, { 'Content-Type': 'application/json' })
+        res.end(JSON.stringify({ message: '500 error - server error' }))
     }
 }
 
@@ -37,7 +39,6 @@ async function getPersonById(req, res, id) {
 // @route POST /person
 async function createPerson(req, res) {
     try {
-
         const body = await getPostData(req)
         const { name, age, hobbies } = JSON.parse(body)
 
@@ -50,8 +51,10 @@ async function createPerson(req, res) {
 
         res.writeHead(201, { 'Content-Type': 'application/json' })
         return res.end(JSON.stringify(newPerson))
+
     } catch (error) {
-        console.log(error);
+        res.writeHead(500, { 'Content-Type': 'application/json' })
+        res.end(JSON.stringify({ message: '500 error - server error' }))
     }
 }
 
@@ -86,7 +89,8 @@ async function updatePerson(req, res, id) {
         }
 
     } catch (error) {
-        console.log(error);
+        res.writeHead(500, { 'Content-Type': 'application/json' })
+        res.end(JSON.stringify({ message: '500 error - server error' }))
     }
 }
 // @desc delete person
@@ -111,7 +115,8 @@ async function deletePerson(req, res, id) {
             }
         }
     } catch (error) {
-        console.log(error);
+        res.writeHead(500, { 'Content-Type': 'application/json' })
+        res.end(JSON.stringify({ message: '500 error - server error' }))
     }
 }
 

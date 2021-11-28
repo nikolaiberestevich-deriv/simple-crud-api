@@ -3,7 +3,6 @@ const { v4: uuidv4 } = require('uuid')
 let persons = require('../data/persons')
 const { writeDataToFile } = require('../utils')
 
-
 function findAll() {
     return new Promise((resolve, reject) => {
         resolve(persons)
