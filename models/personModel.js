@@ -3,11 +3,13 @@ const { v4: uuidv4 } = require('uuid')
 let persons = require('../data/persons')
 const { writeDataToFile } = require('../utils')
 
+
 function findAll() {
     return new Promise((resolve, reject) => {
         resolve(persons)
     })
 }
+
 
 function findById(id) {
     return new Promise((resolve, reject) => {
@@ -15,6 +17,7 @@ function findById(id) {
         resolve(person)
     })
 }
+
 
 function create(person) {
     return new Promise((resolve, reject) => {
@@ -28,6 +31,7 @@ function create(person) {
     })
 }
 
+
 function update(id, person) {
     return new Promise((resolve, reject) => {
         const index = persons.findIndex((p) => p.id === id)
@@ -38,6 +42,7 @@ function update(id, person) {
         resolve(persons[index])
     })
 }
+
 
 function remove(id) {
     return new Promise((resolve, reject) => {

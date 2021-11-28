@@ -42,7 +42,10 @@ async function createPerson(req, res) {
         const { name, age, hobbies } = JSON.parse(body)
 
         const person = { name, age, hobbies }
-
+        if (!name || !age || !Array.isArray(hobbies)) {
+            res.writeHead(400, { 'Content-Type': 'application/json' })
+            return res.end(JSON.stringify({ message: " server can't find name/age/ hobbies, or hobbies is not an array" }))
+        }
         const newPerson = await Person.create(person);
 
         res.writeHead(201, { 'Content-Type': 'application/json' })
@@ -56,25 +59,30 @@ async function createPerson(req, res) {
 // @route PUT /person/id
 async function updatePerson(req, res, id) {
     try {
-        const person = await Person.findById(id)
-
-
-        if (!person) {
-            res.writeHead(404, { 'Content-Type': 'application/json' })
-            res.end(JSON.stringify({ message: 'Person Not Found' }))
+        if (!validate(id)) {
+            res.writeHead(400, { 'Content-Type': 'application/json' })
+            res.end(JSON.stringify({ message: 'id is not valid!!' }))
         } else {
-            const body = await getPostData(req)
-            const { name, age, hobbies } = JSON.parse(body)
+            const person = await Person.findById(id)
 
-            const personData = {
-                name: name || person.name,
-                age: age || person.age,
-                hobbies: hobbies || person.hobbies
+
+            if (!person) {
+                res.writeHead(404, { 'Content-Type': 'application/json' })
+                res.end(JSON.stringify({ message: 'person Not Found' }))
+            } else {
+                const body = await getPostData(req)
+                const { name, age, hobbies } = JSON.parse(body)
+
+                const personData = {
+                    name: name || person.name,
+                    age: age || person.age,
+                    hobbies: hobbies || person.hobbies
+                }
+                const updPerson = await Person.update(id, personData)
+
+                res.writeHead(201, { 'Content-Type': 'application/json' })
+                return res.end(JSON.stringify(updPerson))
             }
-            const updPerson = await Person.update(id, personData)
-
-            res.writeHead(201, { 'Content-Type': 'application/json' })
-            return res.end(JSON.stringify(updPerson))
         }
 
     } catch (error) {
@@ -85,18 +93,23 @@ async function updatePerson(req, res, id) {
 // @route DELETE /person/id
 async function deletePerson(req, res, id) {
     try {
-        const person = await Person.findById(id)
-
-        if (!person) {
-            res.writeHead(404, { 'Content-Type': 'application/json' })
-            res.end(JSON.stringify({ message: `Can't delete: Person Not Found` }))
+        if (!validate(id)) {
+            res.writeHead(400, { 'Content-Type': 'application/json' })
+            res.end(JSON.stringify({ message: 'id is not valid!!' }))
         } else {
-            await Person.remove(id)
 
-            res.writeHead(204, { 'Content-Type': 'application/json' })
-            return res.end(JSON.stringify({}))
+            const person = await Person.findById(id)
+
+            if (!person) {
+                res.writeHead(404, { 'Content-Type': 'application/json' })
+                res.end(JSON.stringify({ message: `Can't delete: Person Not Found` }))
+            } else {
+                await Person.remove(id)
+
+                res.writeHead(204, { 'Content-Type': 'application/json' })
+                return res.end(JSON.stringify({}))
+            }
         }
-
     } catch (error) {
         console.log(error);
     }

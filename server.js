@@ -3,7 +3,6 @@ const http = require('http')
 const { getPersons, getPersonById, createPerson, updatePerson, deletePerson } = require('./controllers/personController')
 
 const server = http.createServer((req, res) => {
-
     if (req.url === '/person' && req.method === 'GET') {
         getPersons(req, res)
     } else if (req.url.match(/\/person\/([\W\S_]+)/) && req.method === 'GET') {
@@ -23,10 +22,10 @@ const server = http.createServer((req, res) => {
 
     } else {
         res.writeHead(404, { 'Content-Type': 'application/json' })
-        //res.write(JSON.stringify(persons)) // if we don't end response
         res.end(JSON.stringify({ message: 'route is not found' }))
     }
-})
+}
+)
 // const PORT = process.env.PORT || 5000
 const PORT = 5500
 
